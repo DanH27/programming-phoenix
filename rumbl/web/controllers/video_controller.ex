@@ -52,5 +52,14 @@ def update(conn, %{"id" => id, "video" => video_params}, user) do
       |> redirect(to: video_path(conn, :show, video))
     {:error, changeset} ->
       render(conn, "edit.html", video: video, changeset: changeset)
-  end 
+  end
+end
+
+def delete(conn, %{"id" => id}, user) do
+  video = Repo.get!(user_videos(user), id)
+  Repo.delete!(video)
+
+  conn
+  |> put_flash(:info, "Video deleted successfully.")
+  |> redirect(to: video_path(conn, :index))
 end
